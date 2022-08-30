@@ -5,11 +5,15 @@
 #include <string.h>   
 #include "crc16.h" 
 
+#define TAMANHO_TX 20
+#define TAMANHO_RX 256
+
 int uart0_filestream = -1;
-unsigned char tx_buffer[20];
+unsigned char tx_buffer[TAMANHO_TX];
 unsigned char *p_tx_buffer;
-unsigned char rx_buffer[256];
+unsigned char rx_buffer[TAMANHO_RX];
 int rx_length;
+
 
 int inicia_UART(){
   uart0_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);      //Open in non blocking read/write mode
@@ -79,6 +83,11 @@ int verifica_CRC(){
       printf("CRC Invalido\n CRC Enviado: %i\n CRC Calculado: %i\n", crc_enviado, crc_calculado);
       return 0;
   }
+}
+
+void reinicializa_variaveis(){
+  memset(tx_buffer, 0, TAMANHO_TX);
+  memset(rx_buffer, 0, TAMANHO_RX);
 }
 
 void fecha_conexao_UART(){
