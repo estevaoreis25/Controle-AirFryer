@@ -18,13 +18,13 @@ int main(){
             le_comandos_usuario();
             break;
         case 4:
-            //enviar_int();
+            envia_sinal_controle();
             break;
         case 5:
-            //enviar_float();
+            envia_sinal_referencia();
             break;
         case 6:
-            //enviar_string();
+            envia_estado_sistema();
             break;
         case 0:
             printf ("SAINDO\n");
@@ -42,9 +42,9 @@ int menu(){
   printf("1. Solicitar Temperatura Interna\n");
   printf("2. Solicitar Temperatura Referencia\n");
   printf("3. Le comandos Usuario\n");
-  printf("4. Enviar um INT\n");
-  printf("5. Enviar um FLOAT\n");
-  printf("6. Enviar uma STRING\n");
+  printf("4. Enviar Sinal de Controle\n");
+  printf("5. Enviar Sinal de Referencia\n");
+  printf("6. Enviar Sinal de Estado do Sistema\n");
   printf("0. SAIR\n");
   printf("\n");
   printf("Digite o número da Opção desejada\n");

@@ -10,5 +10,8 @@ void fecha_conexao_UART();
 float solicita_temperatura_interna();
 float solicita_temperatura_referencia();
 int le_comandos_usuario();
+void envia_sinal_controle();
+void envia_sinal_referencia();
+int envia_estado_sistema();
 
 #endif /* UART_H_ */

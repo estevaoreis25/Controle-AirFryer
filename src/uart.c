@@ -58,8 +58,7 @@ int escreve_na_UART(){
 }
 
 int le_da_UART(){
-  // Read up to 255 characters from the port if they are there
-    rx_length = read(uart0_filestream, (void*)rx_buffer, sizeof(rx_buffer));      //Filestream, buffer to store in, number of bytes to read (max)
+    rx_length = read(uart0_filestream, (void*)rx_buffer, sizeof(rx_buffer));      //Filestream, buffer to store in, number 
     if (rx_length < 0)
     {
         printf("Erro na leitura.\n");
@@ -157,6 +156,7 @@ float solicita_temperatura_referencia(){
   *p_tx_buffer++ = 6;
   *p_tx_buffer++ = 1;
   *p_tx_buffer++ = 6;
+
   short resposta = calcula_CRC(tx_buffer, 7);
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
@@ -216,6 +216,127 @@ int le_comandos_usuario(){
   }
   if(le_da_UART()==0){
     printf("Falha na leitura da UART\n");
+    return 0;
+  } else{
+      //Bytes received
+      rx_buffer[rx_length] = '\0';
+      memcpy(&result, &rx_buffer[3], sizeof(result));
+      printf("Comando do usuario: %d\n", result);
+      
+      if(verifica_CRC() == 0){
+        printf("CRC Inválido");
+        fecha_conexao_UART();
+        return -1;
+
+      }
+
+    }
+    printf("\n\n");
+    fecha_conexao_UART();
+    return result;
+}
+
+void envia_sinal_controle(){
+  if(inicia_UART() == 0){
+    printf("Falha na Conexão da UART\n");
+  }
+  int sinal_controle = -90;
+  p_tx_buffer = &tx_buffer[0];
+  *p_tx_buffer++ = 0x01;
+  *p_tx_buffer++ = 0x16;
+  *p_tx_buffer++ = 0xD1;
+  *p_tx_buffer++ = 2;
+  *p_tx_buffer++ = 6;
+  *p_tx_buffer++ = 1;
+  *p_tx_buffer++ = 6;
+
+  memcpy(p_tx_buffer, &sinal_controle, sizeof(int));
+  p_tx_buffer+=sizeof(int);
+
+  short resposta = calcula_CRC(tx_buffer, 11);
+  memcpy(p_tx_buffer, &resposta, sizeof(resposta));
+  p_tx_buffer+=sizeof(resposta);
+
+  printf("Buffers de memória criados!\n");
+
+  if(escreve_na_UART()==0){
+    printf("Falha na escrita da UART\n");
+  }
+}
+
+void envia_sinal_referencia(){
+  if(inicia_UART() == 0){
+    printf("Falha na Conexão da UART\n");
+    fecha_conexao_UART();
+  }
+  float sinal_referencia = 90.0f;
+  p_tx_buffer = &tx_buffer[0];
+  *p_tx_buffer++ = 0x01;
+  *p_tx_buffer++ = 0x16;
+  *p_tx_buffer++ = 0xD2;
+  *p_tx_buffer++ = 2;
+  *p_tx_buffer++ = 6;
+  *p_tx_buffer++ = 1;
+  *p_tx_buffer++ = 6;
+
+  memcpy(p_tx_buffer, &sinal_referencia, sizeof(sinal_referencia));
+  p_tx_buffer+=sizeof(sinal_referencia);
+
+  short resposta = calcula_CRC(tx_buffer, 11);
+  memcpy(p_tx_buffer, &resposta, sizeof(resposta));
+  p_tx_buffer+=sizeof(resposta);
+
+  printf("Buffers de memória criados!\n");
+
+  if(escreve_na_UART()==0){
+    printf("Falha na escrita da UART\n");
+    fecha_conexao_UART();
+  }
+}
+
+int envia_estado_sistema(){
+  int result;
+  if(inicia_UART() == 0){
+    printf("Falha na Conexão da UART\n");
+    fecha_conexao_UART();
+    return 0;
+  }
+  int estado_sistema;
+  printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
+  scanf("%d", &estado_sistema);
+  while(1){
+    if(estado_sistema ==1 || estado_sistema ==0) break;
+    printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
+    scanf("%d", &estado_sistema);
+  }
+  printf("Estado: %d\n", estado_sistema);
+
+  p_tx_buffer = &tx_buffer[0];
+  *p_tx_buffer++ = 0x01;
+  *p_tx_buffer++ = 0x16;
+  *p_tx_buffer++ = 0xD3;
+  *p_tx_buffer++ = 2;
+  *p_tx_buffer++ = 6;
+  *p_tx_buffer++ = 1;
+  *p_tx_buffer++ = 6;
+
+  memcpy(p_tx_buffer, &estado_sistema, sizeof(estado_sistema));
+  p_tx_buffer+=sizeof(estado_sistema);
+
+  short resposta = calcula_CRC(tx_buffer, 11);
+  memcpy(p_tx_buffer, &resposta, sizeof(resposta));
+  p_tx_buffer+=sizeof(resposta);
+
+  printf("Buffers de memória criados!\n");
+
+  if(escreve_na_UART()==0){
+    printf("Falha na escrita da UART\n");
+    fecha_conexao_UART();
+    return 0;
+  }
+  if(le_da_UART()==0){
+    printf("Falha na leitura da UART\n");
+    fecha_conexao_UART();
     return 0;
   } else{
       //Bytes received
