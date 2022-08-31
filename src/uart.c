@@ -70,6 +70,7 @@ int le_da_UART(){
         printf("Nenhum dado disponível.\n"); //No data waiting
         return 0;
     }
+    return 1;
 }
 
 int verifica_CRC(){
@@ -92,9 +93,11 @@ void reinicializa_variaveis(){
 
 void fecha_conexao_UART(){
   close(uart0_filestream);
+  reinicializa_variaveis();
 }
 
 float solicita_temperatura_interna(){
+  float result;
   if(inicia_UART() == 0){
     printf("Falha na Conexão da UART\n");
     return 0;
@@ -124,15 +127,111 @@ float solicita_temperatura_interna(){
   } else{
       //Bytes received
       rx_buffer[rx_length] = '\0';
-      float result;
       memcpy(&result, &rx_buffer[3], sizeof(result));
-      printf("%i Bytes lidos : %f\n", rx_length, result);
+      printf("Valor da Temperatura interna: %f\n", result);
       
-      if(verifica_CRC == 0){
+      if(verifica_CRC() == 0){
         printf("CRC Inválido");
-        // Voltar a um loop e refazer toda a requisição
+        fecha_conexao_UART();
+        return -1;
+
       }
 
     }
     fecha_conexao_UART();
+    return result;
+}
+
+float solicita_temperatura_referencia(){
+  float result;
+  if(inicia_UART() == 0){
+    printf("Falha na Conexão da UART\n");
+    return 0;
+  }
+
+  p_tx_buffer = &tx_buffer[0];
+  *p_tx_buffer++ = 0x01;
+  *p_tx_buffer++ = 0x23;
+  *p_tx_buffer++ = 0xC2;
+  *p_tx_buffer++ = 2;
+  *p_tx_buffer++ = 6;
+  *p_tx_buffer++ = 1;
+  *p_tx_buffer++ = 6;
+  short resposta = calcula_CRC(tx_buffer, 7);
+  memcpy(p_tx_buffer, &resposta, sizeof(resposta));
+  p_tx_buffer+=sizeof(resposta);
+
+  printf("Buffers de memória criados!\n");
+
+  if(escreve_na_UART()==0){
+    printf("Falha na escrita da UART\n");
+    return 0;
+  }
+  if(le_da_UART()==0){
+    printf("Falha na leitura da UART\n");
+    return 0;
+  } else{
+      //Bytes received
+      rx_buffer[rx_length] = '\0';
+      memcpy(&result, &rx_buffer[3], sizeof(result));
+      printf("Valor da Temperatura de Referencia: %f\n", result);
+      
+      if(verifica_CRC() == 0){
+        printf("CRC Inválido");
+        fecha_conexao_UART();
+        return -1;
+
+      }
+
+    }
+    printf("\n\n");
+    fecha_conexao_UART();
+    return result;
+}
+
+int le_comandos_usuario(){
+  int result;
+  if(inicia_UART() == 0){
+    printf("Falha na Conexão da UART\n");
+    return 0;
+  }
+
+  p_tx_buffer = &tx_buffer[0];
+  *p_tx_buffer++ = 0x01;
+  *p_tx_buffer++ = 0x23;
+  *p_tx_buffer++ = 0xC3;
+  *p_tx_buffer++ = 2;
+  *p_tx_buffer++ = 6;
+  *p_tx_buffer++ = 1;
+  *p_tx_buffer++ = 6;
+  short resposta = calcula_CRC(tx_buffer, 7);
+  memcpy(p_tx_buffer, &resposta, sizeof(resposta));
+  p_tx_buffer+=sizeof(resposta);
+
+  printf("Buffers de memória criados!\n");
+
+  if(escreve_na_UART()==0){
+    printf("Falha na escrita da UART\n");
+    return 0;
+  }
+  if(le_da_UART()==0){
+    printf("Falha na leitura da UART\n");
+    return 0;
+  } else{
+      //Bytes received
+      rx_buffer[rx_length] = '\0';
+      memcpy(&result, &rx_buffer[3], sizeof(result));
+      printf("Comando do usuario: %d\n", result);
+      
+      if(verifica_CRC() == 0){
+        printf("CRC Inválido");
+        fecha_conexao_UART();
+        return -1;
+
+      }
+
+    }
+    printf("\n\n");
+    fecha_conexao_UART();
+    return result;
 }
