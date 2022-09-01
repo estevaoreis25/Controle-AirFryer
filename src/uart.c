@@ -57,6 +57,8 @@ int escreve_na_UART(){
     return 1;
 }
 
+
+
 int le_da_UART(){
     rx_length = read(uart0_filestream, (void*)rx_buffer, sizeof(rx_buffer));      //Filestream, buffer to store in, number 
     if (rx_length < 0)
