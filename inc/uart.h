@@ -14,5 +14,6 @@ void envia_sinal_controle();
 void envia_sinal_referencia();
 int envia_estado_sistema();
 int envia_estado_funcionamento();
+int envia_valor_temporizador();
 
 #endif /* UART_H_ */

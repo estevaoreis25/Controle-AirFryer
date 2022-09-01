@@ -26,6 +26,12 @@ int main(){
         case 6:
             envia_estado_sistema();
             break;
+        case 7:
+            envia_estado_funcionamento();
+            break;
+        case 8:
+            envia_valor_temporizador();
+            break;
         case 0:
             printf ("SAINDO\n");
             break;
@@ -45,6 +51,8 @@ int menu(){
   printf("4. Enviar Sinal de Controle\n");
   printf("5. Enviar Sinal de Referencia\n");
   printf("6. Enviar Sinal de Estado do Sistema\n");
+  printf("7. Enviar Sinal de Funcionamento do Sistema\n");
+  printf("8. Enviar valor do Temporizador\n");
   printf("0. SAIR\n");
   printf("\n");
   printf("Digite o número da Opção desejada\n");
