@@ -13,5 +13,6 @@ int le_comandos_usuario();
 void envia_sinal_controle();
 void envia_sinal_referencia();
 int envia_estado_sistema();
+int envia_estado_funcionamento();
 
 #endif /* UART_H_ */

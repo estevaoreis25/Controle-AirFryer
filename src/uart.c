@@ -240,7 +240,7 @@ void envia_sinal_controle(){
   if(inicia_UART() == 0){
     printf("Falha na Conexão da UART\n");
   }
-  int sinal_controle = -90;
+  int sinal_controle = -20;
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
   *p_tx_buffer++ = 0x16;
@@ -269,7 +269,9 @@ void envia_sinal_referencia(){
     printf("Falha na Conexão da UART\n");
     fecha_conexao_UART();
   }
-  float sinal_referencia = 90.0f;
+  float sinal_referencia;
+  printf("Digite o numero da temperatura de referencia que deseja entre 0 a 90\n");
+  scanf("%f", &sinal_referencia);
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
   *p_tx_buffer++ = 0x16;
@@ -304,15 +306,18 @@ int envia_estado_sistema(){
   }
 
   unsigned char estado_sistema;
+  int confirma;
   printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
-  scanf("%c", &estado_sistema);
 
-  while(1){
-    if(estado_sistema == 1 || estado_sistema == 0) break;
+  while(scanf("%d", &confirma)){
+    if(confirma == 1 || confirma == 0) break;
+
     printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
-    scanf("%c", &estado_sistema);
   }
-  printf("Estado: %d\n", estado_sistema);
+
+  estado_sistema = confirma;
+
+  printf("Estado: %d\n", confirma);
 
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
@@ -372,7 +377,7 @@ int envia_estado_funcionamento(){
   scanf("%c", &estado_funcionamento);
 
   while(1){
-    if(estado_funcionamento == 1 || estado_funcionamento == 0) break;
+    if(estado_funcionamento == '1' || estado_funcionamento == '0') break;
     printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
     scanf("%c", &estado_funcionamento);
   }
@@ -408,7 +413,7 @@ int envia_estado_funcionamento(){
       //Bytes received
       rx_buffer[rx_length] = '\0';
       memcpy(&result, &rx_buffer[3], sizeof(result));
-      printf("Comando do usuario: %d\n", result);
+      printf("Comando do usuario: %f\n", result);
       
       if(verifica_CRC() == 0){
         printf("CRC Inválido");
