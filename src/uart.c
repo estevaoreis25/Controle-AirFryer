@@ -296,18 +296,21 @@ void envia_sinal_referencia(){
 
 int envia_estado_sistema(){
   int result;
+  
   if(inicia_UART() == 0){
     printf("Falha na Conexão da UART\n");
     fecha_conexao_UART();
     return 0;
   }
-  int estado_sistema;
+
+  unsigned char estado_sistema;
   printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
-  scanf("%d", &estado_sistema);
+  scanf("%c", &estado_sistema);
+
   while(1){
-    if(estado_sistema ==1 || estado_sistema ==0) break;
+    if(estado_sistema == 1 || estado_sistema == 0) break;
     printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
-    scanf("%d", &estado_sistema);
+    scanf("%c", &estado_sistema);
   }
   printf("Estado: %d\n", estado_sistema);
 
@@ -323,7 +326,70 @@ int envia_estado_sistema(){
   memcpy(p_tx_buffer, &estado_sistema, sizeof(estado_sistema));
   p_tx_buffer+=sizeof(estado_sistema);
 
-  short resposta = calcula_CRC(tx_buffer, 11);
+  short resposta = calcula_CRC(tx_buffer, 8);
+  memcpy(p_tx_buffer, &resposta, sizeof(resposta));
+  p_tx_buffer+=sizeof(resposta);
+
+  printf("Buffers de memória criados!\n");
+
+  if(escreve_na_UART()==0){
+    printf("Falha na escrita da UART\n");
+    fecha_conexao_UART();
+    return 0;
+  }
+  if(le_da_UART()==0){
+    printf("Falha na leitura da UART\n");
+    fecha_conexao_UART();
+    return 0;
+  } else{
+      //Bytes received
+      rx_buffer[rx_length] = '\0';
+      memcpy(&result, &rx_buffer[3], sizeof(result));
+      printf("Estado do Sistema: %d\n", result);
+      
+      if(verifica_CRC() == 0){
+        printf("CRC Inválido");
+        fecha_conexao_UART();
+        return -1;
+      }
+    }
+
+    printf("\n\n");
+    fecha_conexao_UART();
+    return result;
+}
+
+int envia_estado_funcionamento(){
+  float result;
+  if(inicia_UART() == 0){
+    printf("Falha na Conexão da UART\n");
+    fecha_conexao_UART();
+    return 0;
+  }
+
+  unsigned char estado_funcionamento;
+  printf("Digite 1 para iniciar ou 0 para parar o sistema [1|0]\n");
+  scanf("%c", &estado_funcionamento);
+
+  while(1){
+    if(estado_funcionamento == 1 || estado_funcionamento == 0) break;
+    printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
+    scanf("%c", &estado_funcionamento);
+  }
+
+  p_tx_buffer = &tx_buffer[0];
+  *p_tx_buffer++ = 0x01;
+  *p_tx_buffer++ = 0x16;
+  *p_tx_buffer++ = 0xD5;
+  *p_tx_buffer++ = 2;
+  *p_tx_buffer++ = 6;
+  *p_tx_buffer++ = 1;
+  *p_tx_buffer++ = 6;
+
+  memcpy(p_tx_buffer, &estado_funcionamento, sizeof(estado_funcionamento));
+  p_tx_buffer+=sizeof(estado_funcionamento);
+
+  short resposta = calcula_CRC(tx_buffer, 8);
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
