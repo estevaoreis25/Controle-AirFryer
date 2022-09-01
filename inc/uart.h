@@ -12,8 +12,8 @@ float solicita_temperatura_referencia();
 int le_comandos_usuario();
 void envia_sinal_controle();
 void envia_sinal_referencia();
-int envia_estado_sistema();
-int envia_estado_funcionamento();
-int envia_valor_temporizador();
+int envia_estado_sistema(int sinal_usuario);
+int envia_estado_funcionamento(int sinal_usuario);
+int envia_valor_temporizador(int tempo);
 
 #endif /* UART_H_ */

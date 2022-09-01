@@ -1,44 +1,50 @@
 #include <stdio.h>
 #include "uart.h"
+#include <unistd.h>
 
 int menu();
 
+int comando_usuario;
+
 int main(){
-  int opcao;
-    opcao = menu();
-    while(opcao){
-        switch(opcao){
-        case 1:
-            solicita_temperatura_interna();
-            break;
-        case 2:
-            solicita_temperatura_referencia();
-            break;
-        case 3:
-            le_comandos_usuario();
-            break;
-        case 4:
-            envia_sinal_controle();
-            break;
-        case 5:
-            envia_sinal_referencia();
-            break;
-        case 6:
-            envia_estado_sistema();
-            break;
-        case 7:
-            envia_estado_funcionamento();
-            break;
-        case 8:
-            envia_valor_temporizador();
-            break;
-        case 0:
-            printf ("SAINDO\n");
-            break;
-        default :
-            printf ("Valor invalido!\n");
-        }
-     opcao = menu();
+    while(1){
+
+     comando_usuario = le_comandos_usuario();
+     switch (comando_usuario){
+     case 1:
+        //Liga AirFryer
+        envia_estado_sistema(1);
+
+        break;
+    case 2:
+        //Desliga AirFryer
+        envia_estado_sistema(0);
+        
+        break;
+    case 3:
+        //Inicia AirFryer
+        envia_estado_funcionamento(1);
+        
+        break;
+    case 4:
+        //Para AirFryer
+        envia_estado_funcionamento(0);
+
+        break;
+    case 5:
+        //Tempo++ AirFryer
+        envia_valor_temporizador(1);
+        
+        break;
+    case 6:
+        //Tempo-- AirFryer
+        envia_valor_temporizador(-1);
+        break;
+     
+     default:
+        break;
+     }
+     sleep(0.5);
     }
    return 0;
 }

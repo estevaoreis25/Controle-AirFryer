@@ -13,7 +13,7 @@ unsigned char tx_buffer[TAMANHO_TX];
 unsigned char *p_tx_buffer;
 unsigned char rx_buffer[TAMANHO_RX];
 int rx_length;
-
+int tempo_airfrey = 0;
 
 int inicia_UART(){
   uart0_filestream = open("/dev/serial0", O_RDWR | O_NOCTTY | O_NDELAY);      //Open in non blocking read/write mode
@@ -298,7 +298,7 @@ void envia_sinal_referencia(){
   }
 }
 
-int envia_estado_sistema(){
+int envia_estado_sistema(int sinal_usuario){
   int result;
   
   if(inicia_UART() == 0){
@@ -308,18 +308,10 @@ int envia_estado_sistema(){
   }
 
   unsigned char estado_sistema;
-  int confirma;
-  printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
 
-  while(scanf("%d", &confirma)){
-    if(confirma == 1 || confirma == 0) break;
+  estado_sistema = sinal_usuario;
 
-    printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
-  }
-
-  estado_sistema = confirma;
-
-  printf("Estado: %d\n", confirma);
+  printf("Estado: %d\n", sinal_usuario);
 
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
@@ -366,7 +358,7 @@ int envia_estado_sistema(){
     return result;
 }
 
-int envia_estado_funcionamento(){
+int envia_estado_funcionamento(int sinal_usuario){
   float result;
   if(inicia_UART() == 0){
     printf("Falha na Conexão da UART\n");
@@ -375,14 +367,8 @@ int envia_estado_funcionamento(){
   }
 
   unsigned char estado_funcionamento;
-  int confirma;
-  printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
-  while(scanf("%d", &confirma)){
-    if(confirma == 1 || confirma == 0) break;
-    printf("Digite 1 para ligar ou 0 para desligar o sistema [1|0]\n");
-  }
 
-  estado_funcionamento = confirma;
+  estado_funcionamento = sinal_usuario;
 
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
@@ -430,18 +416,13 @@ int envia_estado_funcionamento(){
     return result;
 }
 
-int envia_valor_temporizador(){
+int envia_valor_temporizador(int tempo){
   int result;
   if(inicia_UART() == 0){
     printf("Falha na Conexão da UART\n");
     fecha_conexao_UART();
     return 0;
   }
-
-  int tempo;
-
-  printf("Digite o tempo em minutos que deseja que o aparelho esteja em funcionamento\n");
-  scanf("%d", &tempo);
 
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
@@ -452,8 +433,14 @@ int envia_valor_temporizador(){
   *p_tx_buffer++ = 1;
   *p_tx_buffer++ = 6;
 
-  memcpy(p_tx_buffer, &tempo, sizeof(tempo));
-  p_tx_buffer+=sizeof(tempo);
+  if(tempo == -1 && tempo_airfrey <= 0){
+    tempo_airfrey = 0;
+  }else {
+    tempo_airfrey+=tempo;
+  }
+
+  memcpy(p_tx_buffer, &tempo_airfrey, sizeof(tempo_airfrey));
+  p_tx_buffer+=sizeof(tempo_airfrey);
 
   short resposta = calcula_CRC(tx_buffer, 11);
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
