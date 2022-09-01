@@ -4,7 +4,9 @@
 
 int menu();
 
-int comando_usuario;
+int comando_usuario = 0;
+int airfray_ligada = 0;
+int airfray_em_uso = 0;
 
 int main(){
     while(1){
@@ -14,21 +16,25 @@ int main(){
      case 1:
         //Liga AirFryer
         envia_estado_sistema(1);
+        airfray_ligada = 1;
 
         break;
     case 2:
         //Desliga AirFryer
         envia_estado_sistema(0);
+        airfray_ligada = 0;
         
         break;
     case 3:
         //Inicia AirFryer
         envia_estado_funcionamento(1);
+        int airfray_em_uso = 1;
         
         break;
     case 4:
         //Para AirFryer
         envia_estado_funcionamento(0);
+        int airfray_em_uso = 0;
 
         break;
     case 5:
