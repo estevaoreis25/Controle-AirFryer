@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include "pid.h"
 #include "gpio.h"
+#include <math.h>
 
 void conta_tempo();
 
@@ -25,7 +26,6 @@ int main(){
     envia_valor_temporizador(0);
 
     while(1){
-
      comando_usuario = le_comandos_usuario();
      switch (comando_usuario){
         case 1:
@@ -78,7 +78,7 @@ int main(){
             break;
      }
 
-     if(airfray_ligada == 1 && airfray_em_uso == 1){
+     if(airfray_ligada && airfray_em_uso){
         printf("Valor inicia: %d\n", inicia);
         if(!inicia){
             temperatura_referencia = solicita_temperatura_referencia();
@@ -89,12 +89,13 @@ int main(){
         if(inicia){
             temperatura_interna = solicita_temperatura_interna();
             sinal_controle = pid_controle(temperatura_interna);
-            printf("Sinal de controle: %f", sinal_controle);
+            printf("Sinal de controle: %f\n", sinal_controle);
             printf("Entrou na solicitação de temperatura %f\n", temperatura_interna);
             envia_sinal_controle((int)sinal_controle);
             if(sinal_controle >= 0){
                 printf("AQUECENDO\n");
                 aquece((int)sinal_controle);
+                resfria(0);
                 
             }else if(sinal_controle <0){
                 printf("Resfriando");
@@ -102,9 +103,10 @@ int main(){
                     resfria(40);
                 }
                 else {
-                    sinal_controle *=-1;
-                    resfria((int)sinal_controle);
+                    
+                    resfria(abs((int)sinal_controle));
                 }
+                aquece(0);
             }
             if((temperatura_interna + 1) >= temperatura_referencia){
                 tempo_iniciado = 1;
