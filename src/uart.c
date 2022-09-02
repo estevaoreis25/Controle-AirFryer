@@ -22,7 +22,7 @@ int inicia_UART(){
   }
   else
   {
-      printf("UART inicializada!\n");
+      //printf("UART inicializada!\n");
   }    
   struct termios options;
   tcgetattr(uart0_filestream, &options);
@@ -38,7 +38,7 @@ int inicia_UART(){
 int escreve_na_UART(){
     if (uart0_filestream != -1)
     {
-        printf("Escrevendo caracteres na UART ...");
+        //printf("Escrevendo caracteres na UART ...");
         int count = write(uart0_filestream, &tx_buffer[0], (p_tx_buffer - &tx_buffer[0]));
         if (count < 0)
         {
@@ -48,7 +48,7 @@ int escreve_na_UART(){
         }
         else
         {
-            printf("escrito.\n");
+            //printf("escrito.\n");
             sleep(1);
         }
     }
@@ -77,7 +77,7 @@ int verifica_CRC(){
   memcpy(&crc_enviado, &rx_buffer[7], sizeof(short));
   short crc_calculado = calcula_CRC(rx_buffer, 7);
   if(crc_enviado == crc_calculado){
-      printf("CRC Validado\n CRC Enviado: %i\n CRC Calculado: %i\n", crc_enviado, crc_calculado);
+      //printf("CRC Validado\n CRC Enviado: %i\n CRC Calculado: %i\n", crc_enviado, crc_calculado);
       return 1;
   }else{
       printf("CRC Invalido\n CRC Enviado: %i\n CRC Calculado: %i\n", crc_enviado, crc_calculado);
@@ -98,7 +98,7 @@ void fecha_conexao_UART(){
 float solicita_temperatura_interna(){
   float result;
   if(inicia_UART() == 0){
-    printf("Falha na Conexão da UART\n");
+    //printf("Falha na Conexão da UART\n");
     return 0;
   }
 
@@ -114,14 +114,12 @@ float solicita_temperatura_interna(){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
-
   if(escreve_na_UART()==0){
-    printf("Falha na escrita da UART\n");
+    //printf("Falha na escrita da UART\n");
     return 0;
   }
   if(le_da_UART()==0){
-    printf("Falha na leitura da UART\n");
+    //printf("Falha na leitura da UART\n");
     return 0;
   } else{
       //Bytes received
@@ -130,12 +128,11 @@ float solicita_temperatura_interna(){
       printf("Valor da Temperatura interna: %f\n", result);
       
       if(verifica_CRC() == 0){
-        printf("CRC Inválido");
+        //printf("CRC Inválido");
         fecha_conexao_UART();
         return -1;
 
       }
-
     }
     fecha_conexao_UART();
     return result;
@@ -144,7 +141,7 @@ float solicita_temperatura_interna(){
 float solicita_temperatura_referencia(){
   float result;
   if(inicia_UART() == 0){
-    printf("Falha na Conexão da UART\n");
+    //printf("Falha na Conexão da UART\n");
     return 0;
   }
 
@@ -161,14 +158,12 @@ float solicita_temperatura_referencia(){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
-
   if(escreve_na_UART()==0){
-    printf("Falha na escrita da UART\n");
+    //printf("Falha na escrita da UART\n");
     return 0;
   }
   if(le_da_UART()==0){
-    printf("Falha na leitura da UART\n");
+    //printf("Falha na leitura da UART\n");
     return 0;
   } else{
       //Bytes received
@@ -184,7 +179,7 @@ float solicita_temperatura_referencia(){
       }
 
     }
-    printf("\n\n");
+    printf("\n");
     fecha_conexao_UART();
     return result;
 }
@@ -192,7 +187,7 @@ float solicita_temperatura_referencia(){
 int le_comandos_usuario(){
   int result;
   if(inicia_UART() == 0){
-    printf("Falha na Conexão da UART\n");
+    //printf("Falha na Conexão da UART\n");
     return 0;
   }
 
@@ -208,37 +203,36 @@ int le_comandos_usuario(){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
 
   if(escreve_na_UART()==0){
-    printf("Falha na escrita da UART\n");
+    //printf("Falha na escrita da UART\n");
     return 0;
   }
   if(le_da_UART()==0){
-    printf("Falha na leitura da UART\n");
+    //printf("Falha na leitura da UART\n");
     return 0;
   } else{
       //Bytes received
       rx_buffer[rx_length] = '\0';
       memcpy(&result, &rx_buffer[3], sizeof(result));
-      printf("Comando do usuario: %d\n", result);
+      //printf("Comando do usuario: %d\n", result);
       
       if(verifica_CRC() == 0){
-        printf("CRC Inválido");
+        //printf("CRC Inválido");
         fecha_conexao_UART();
         return -1;
 
       }
 
     }
-    printf("\n\n");
+    printf("\n");
     fecha_conexao_UART();
     return result;
 }
 
 void envia_sinal_controle(){
   if(inicia_UART() == 0){
-    printf("Falha na Conexão da UART\n");
+    //printf("Falha na Conexão da UART\n");
   }
   int sinal_controle = -20;
   p_tx_buffer = &tx_buffer[0];
@@ -257,16 +251,15 @@ void envia_sinal_controle(){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
 
   if(escreve_na_UART()==0){
-    printf("Falha na escrita da UART\n");
+    //printf("Falha na escrita da UART\n");
   }
 }
 
 void envia_sinal_referencia(){
   if(inicia_UART() == 0){
-    printf("Falha na Conexão da UART\n");
+    //printf("Falha na Conexão da UART\n");
     fecha_conexao_UART();
   }
   float sinal_referencia;
@@ -288,7 +281,6 @@ void envia_sinal_referencia(){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
 
   if(escreve_na_UART()==0){
     printf("Falha na escrita da UART\n");
@@ -327,22 +319,21 @@ int envia_estado_sistema(int sinal_usuario){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
 
   if(escreve_na_UART()==0){
-    printf("Falha na escrita da UART\n");
+    //printf("Falha na escrita da UART\n");
     fecha_conexao_UART();
     return 0;
   }
   if(le_da_UART()==0){
-    printf("Falha na leitura da UART\n");
+    //printf("Falha na leitura da UART\n");
     fecha_conexao_UART();
     return 0;
   } else{
       //Bytes received
       rx_buffer[rx_length] = '\0';
       memcpy(&result, &rx_buffer[3], sizeof(result));
-      printf("Estado do Sistema: %d\n", result);
+      //printf("Estado do Sistema: %d\n", result);
       
       if(verifica_CRC() == 0){
         printf("CRC Inválido");
@@ -351,7 +342,7 @@ int envia_estado_sistema(int sinal_usuario){
       }
     }
 
-    printf("\n\n");
+    printf("\n");
     fecha_conexao_UART();
     return result;
 }
@@ -359,7 +350,7 @@ int envia_estado_sistema(int sinal_usuario){
 int envia_estado_funcionamento(int sinal_usuario){
   float result;
   if(inicia_UART() == 0){
-    printf("Falha na Conexão da UART\n");
+    //printf("Falha na Conexão da UART\n");
     fecha_conexao_UART();
     return 0;
   }
@@ -384,22 +375,20 @@ int envia_estado_funcionamento(int sinal_usuario){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
-
   if(escreve_na_UART()==0){
-    printf("Falha na escrita da UART\n");
+    //printf("Falha na escrita da UART\n");
     fecha_conexao_UART();
     return 0;
   }
   if(le_da_UART()==0){
-    printf("Falha na leitura da UART\n");
+    //printf("Falha na leitura da UART\n");
     fecha_conexao_UART();
     return 0;
   } else{
       //Bytes received
       rx_buffer[rx_length] = '\0';
       memcpy(&result, &rx_buffer[3], sizeof(result));
-      printf("Comando do usuario: %f\n", result);
+      //printf("Comando do usuario: %f\n", result);
       
       if(verifica_CRC() == 0){
         printf("CRC Inválido");
@@ -409,7 +398,7 @@ int envia_estado_funcionamento(int sinal_usuario){
       }
 
     }
-    printf("\n\n");
+    printf("\n");
     fecha_conexao_UART();
     return result;
 }
@@ -417,7 +406,7 @@ int envia_estado_funcionamento(int sinal_usuario){
 int envia_valor_temporizador(int tempo){
   int result;
   if(inicia_UART() == 0){
-    printf("Falha na Conexão da UART\n");
+    //printf("Falha na Conexão da UART\n");
     fecha_conexao_UART();
     return 0;
   }
@@ -444,22 +433,20 @@ int envia_valor_temporizador(int tempo){
   memcpy(p_tx_buffer, &resposta, sizeof(resposta));
   p_tx_buffer+=sizeof(resposta);
 
-  printf("Buffers de memória criados!\n");
-
   if(escreve_na_UART()==0){
-    printf("Falha na escrita da UART\n");
+    //printf("Falha na escrita da UART\n");
     fecha_conexao_UART();
     return 0;
   }
   if(le_da_UART()==0){
-    printf("Falha na leitura da UART\n");
+    //printf("Falha na leitura da UART\n");
     fecha_conexao_UART();
     return 0;
   } else{
       //Bytes received
       rx_buffer[rx_length] = '\0';
       memcpy(&result, &rx_buffer[3], sizeof(result));
-      printf("Comando do usuario: %d\n", result);
+      printf("Valor do temporizador: %d\n", result);
       
       if(verifica_CRC() == 0){
         printf("CRC Inválido");
@@ -469,7 +456,7 @@ int envia_valor_temporizador(int tempo){
       }
 
     }
-    printf("\n\n");
+    printf("\n");
     fecha_conexao_UART();
     return result;
 }
