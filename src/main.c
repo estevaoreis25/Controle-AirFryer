@@ -4,7 +4,7 @@
 #include "pid.h"
 #include "gpio.h"
 
-int menu();
+void conta_tempo();
 
 int comando_usuario = 0;
 int airfray_ligada = 0;
@@ -15,6 +15,7 @@ int inicia = 0;
 double sinal_controle = 0.0;
 float tempo = 0;
 float segundos = 0;
+int tempo_iniciado = 0;
 
 int main(){
     pid_configura_constantes(30.0, 0.2, 400.0);
@@ -90,20 +91,24 @@ int main(){
             sinal_controle = pid_controle(temperatura_interna);
             printf("Sinal de controle: %f", sinal_controle);
             printf("Entrou na solicitação de temperatura %f\n", temperatura_interna);
-            envia_sinal_controle(sinal_controle);
+            envia_sinal_controle((int)sinal_controle);
             if(sinal_controle >= 0){
-                aquece(sinal_controle);
+                printf("AQUECENDO\n");
+                aquece((int)sinal_controle);
                 
             }else if(sinal_controle <0){
+                printf("Resfriando");
                 if(sinal_controle>=-40){
                     resfria(40);
                 }
                 else {
                     sinal_controle *=-1;
-                    resfria(sinal_controle);
+                    resfria((int)sinal_controle);
                 }
             }
-
+            if((temperatura_interna + 1) >= temperatura_referencia){
+                tempo_iniciado = 1;
+            }
         }
 
      }else if(!airfray_ligada && !airfray_em_uso){
@@ -114,20 +119,25 @@ int main(){
         airfray_em_uso = 0;
      }
      sleep(0.5);
-     if(airfray_ligada && airfray_em_uso && temperatura_interna >= temperatura_referencia){
+     conta_tempo();
+    }
+   return 0;
+}
+
+void conta_tempo(){
+    if(tempo_iniciado){
         segundos+=1.5;
-        printf("Segundos %f -- Minutos %f\n", segundos, tempo);
         if(segundos >= 60){
             tempo--;
             envia_valor_temporizador(tempo);
             segundos = 0;
         }
-     }
+        printf("Segundos %f -- Minutos %f\n", segundos, tempo);
+
     }
-   return 0;
 }
 
-int menu(){
+/* int menu(){
   printf("-------------Opções-----------\n");
   printf("1. Solicitar Temperatura Interna\n");
   printf("2. Solicitar Temperatura Referencia\n");
@@ -143,4 +153,4 @@ int menu(){
   int opcao;
   scanf("%d", &opcao);
   return opcao;
-}
+} */

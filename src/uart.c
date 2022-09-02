@@ -230,11 +230,11 @@ int le_comandos_usuario(){
     return result;
 }
 
-void envia_sinal_controle(){
+void envia_sinal_controle(int sinal_controle){
   if(inicia_UART() == 0){
     //printf("Falha na Conexão da UART\n");
   }
-  int sinal_controle = -20;
+  
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
   *p_tx_buffer++ = 0x16;
