@@ -4,9 +4,7 @@
 #include <termios.h> 
 #include <string.h>   
 #include "crc16.h" 
-
-#define TAMANHO_TX 20
-#define TAMANHO_RX 256
+#include "uart.h"
 
 int uart0_filestream = -1;
 unsigned char tx_buffer[TAMANHO_TX];

@@ -1,6 +1,9 @@
 #ifndef UART_H_
 #define UART_H_
 
+#define TAMANHO_TX 20
+#define TAMANHO_RX 256
+
 int inicia_UART();
 int escreve_na_UART();
 int le_da_UART();
