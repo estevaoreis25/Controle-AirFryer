@@ -58,13 +58,13 @@ int main(){
             break;
         case 3:
             //Inicia AirFryer
-            if(airfray_ligada && tempo >0){
+            if(airfray_ligada){
+                if(tempo >0 ||!resfriado){
                 envia_estado_funcionamento(1);
                 airfray_em_uso = 1;
                 mostra_ti_tr(temperatura_interna, temperatura_referencia);
-                
-            }
-            
+                }
+            }            
             break;
         case 4:
             //Para AirFryer
@@ -95,47 +95,42 @@ int main(){
             break;
         case 7:
             //Menu
-            opcao_menu++;
-            if(opcao_menu>6){
-                opcao_menu = 0;
-                liga_lcd(temperatura_interna, temperatura_referencia);
-            }else{
-                mostra_menu(opcao_menu);
-            } 
-            if(opcao_menu != 0 && !inicia){
-                switch (opcao_menu){
-                case 1:
-                    tempo = 2.0;
-                    temperatura_referencia = 30.0;
+            if(airfray_ligada){
+                opcao_menu++;
+                if(opcao_menu>6){
+                    opcao_menu = 0;
+                    liga_lcd(temperatura_interna, temperatura_referencia);
+                }else{
+                    mostra_menu(opcao_menu);
+                } 
+                if(opcao_menu != 0 && !inicia){
+                    switch (opcao_menu){
+                    case 1:
+                        tempo = 2.0;
 
-                break;
-                case 2:
-                    tempo = 3.0;
-                    temperatura_referencia = 40.0;
-                break;
-                case 3:
-                    tempo = 4.0;
-                    temperatura_referencia = 35.0;
-                    
-                break;
-                case 4:
-                    tempo = 5.0;
-                    temperatura_referencia = 40.0;
-                break;
-                case 5:
-                    tempo = 3.0;
-                    temperatura_referencia = 20.0;
-                break;
-                case 6:
-                    tempo = 4.0;
-                    temperatura_referencia = 25.0;
-                break;
-                default:
                     break;
+                    case 2:
+                        tempo = 3.0;
+                    break;
+                    case 3:
+                        tempo = 4.0;
+                        
+                    break;
+                    case 4:
+                        tempo = 5.0;
+                    break;
+                    case 5:
+                        tempo = 3.0;
+                    break;
+                    case 6:
+                        tempo = 4.0;
+                    break;
+                    default:
+                        break;
+                    }
                 }
+
             }
-            break;
-        
         default:
             break;
      }
@@ -144,8 +139,6 @@ int main(){
         
         aquece_airfrey();
 
-     }else if(!airfray_em_uso && airfray_ligada) {
-        //para_aquecimento();
      }
      if(!inicia_cozimento && airfray_em_uso && !resfriado && tempo==0){
         // Resfriamento da airfrey apos o cozimento
@@ -204,7 +197,7 @@ void aquece_airfrey(){
         inicia = 1;
     } else if(!inicia && opcao_menu != 0){
         envia_valor_temporizador(tempo);
-        envia_sinal_referencia(temperatura_referencia);
+        temperatura_referencia = solicita_temperatura_referencia();
         pid_atualiza_referencia(temperatura_referencia);
         inicia = 1;
     }

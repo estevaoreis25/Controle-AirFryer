@@ -159,9 +159,6 @@ void mostra_menu(int opcao_menu){
         lcdLoc(LINHA1);
         typeln("TEMPO:");
         typeFloat(2.0);
-        typeln(" ");
-        typeln("TR:");
-        typeFloat(30.0);
         lcdLoc(LINHA2);
         typeln("FRANGO");
     break;
@@ -170,9 +167,6 @@ void mostra_menu(int opcao_menu){
         lcdLoc(LINHA1);
         typeln("TEMPO:");
         typeFloat(3.0);
-        typeln(" ");
-        typeln("TR:");
-        typeFloat(40.0);
         lcdLoc(LINHA2);
         typeln("PEIXE");
     break;
@@ -181,9 +175,6 @@ void mostra_menu(int opcao_menu){
         lcdLoc(LINHA1);
         typeln("TEMPO:");
         typeFloat(4.0);
-        typeln(" ");
-        typeln("TR:");
-        typeFloat(35.0);
         lcdLoc(LINHA2);
         typeln("CARNE");
     break;
@@ -192,9 +183,6 @@ void mostra_menu(int opcao_menu){
         lcdLoc(LINHA1);
         typeln("TEMPO:");
         typeFloat(5.0);
-        typeln(" ");
-        typeln("TR:");
-        typeFloat(40.0);
         lcdLoc(LINHA2);
         typeln("ARROZ");
     break;
@@ -203,9 +191,6 @@ void mostra_menu(int opcao_menu){
         lcdLoc(LINHA1);
         typeln("TEMPO:");
         typeFloat(3.0);
-        typeln(" ");
-        typeln("TR:");
-        typeFloat(20.0);
         lcdLoc(LINHA2);
         typeln("PIPOCA");
     break;
@@ -214,9 +199,6 @@ void mostra_menu(int opcao_menu){
         lcdLoc(LINHA1);
         typeln("TEMPO:");
         typeFloat(4.0);
-        typeln(" ");
-        typeln("TR:");
-        typeFloat(25.0);
         lcdLoc(LINHA2);
         typeln("VEGETAIS");
     break;
