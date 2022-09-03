@@ -86,10 +86,7 @@ int main(){
      if(airfray_ligada && airfray_em_uso){
         aquece_airfrey();
 
-     }else if(!airfray_ligada && !airfray_em_uso){
-        //para_aquecimento();
-        inicia = 0;
-     } else if(!airfray_em_uso && airfray_ligada) {
+     }else if(!airfray_em_uso && airfray_ligada) {
         //para_aquecimento();
      }
      if(!inicia_cozimento && airfray_em_uso && !resfriado){
@@ -97,9 +94,18 @@ int main(){
         envia_sinal_referencia(26.0);
         temperatura_referencia = 26.0;
         if((temperatura_interna - 2) <= temperatura_referencia){
+            aquece(0);
+            resfria(0);
             para_aquecimento();
             envia_estado_funcionamento(0);
             envia_estado_sistema(0);
+            airfray_em_uso = 0;
+            airfray_ligada = 0;
+            inicia = 0;
+            envia_valor_temporizador(0);
+            tempo = 0;
+            segundos = 0;
+            inicia_cozimento = 0;
             resfriado = 1;
         }
      }
