@@ -5,6 +5,7 @@
 #include "gpio.h"
 #include <math.h>
 #include <stdlib.h>
+#include "lcd.h"
 
 void conta_tempo();
 void aquece_airfrey();
@@ -37,6 +38,7 @@ int main(){
             //Liga AirFryer
             envia_estado_sistema(1);
             airfray_ligada = 1;
+            liga_lcd();
 
             break;
         case 2:
@@ -45,7 +47,9 @@ int main(){
             envia_estado_funcionamento(0);
             envia_valor_temporizador(0);
             airfray_ligada = 0;
-            
+            airfray_em_uso = 0;
+            aquece(0);
+            resfria(0);
             break;
         case 3:
             //Inicia AirFryer
@@ -58,6 +62,8 @@ int main(){
         case 4:
             //Para AirFryer
             envia_estado_funcionamento(0);
+            aquece(0);
+            resfria(0);
             airfray_em_uso = 0;
 
             break;
@@ -77,6 +83,10 @@ int main(){
                 tempo--;
                 //printf("TEMPO ATUAL: %f\n", tempo);
             }
+            break;
+        case 7:
+            //Menu
+
             break;
         
         default:
