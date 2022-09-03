@@ -169,7 +169,7 @@ float solicita_temperatura_referencia(){
       //Bytes received
       rx_buffer[rx_length] = '\0';
       memcpy(&result, &rx_buffer[3], sizeof(result));
-      printf("Valor da Temperatura de Referencia: %f\n", result);
+      printf("Temperatura de Referencia: %f\n", result);
       
       if(verifica_CRC() == 0){
         printf("CRC Inválido");
@@ -257,14 +257,12 @@ void envia_sinal_controle(int sinal_controle){
   }
 }
 
-void envia_sinal_referencia(){
+void envia_sinal_referencia(float sinal_referencia){
   if(inicia_UART() == 0){
     //printf("Falha na Conexão da UART\n");
     fecha_conexao_UART();
   }
-  float sinal_referencia;
-  printf("Digite o numero da temperatura de referencia que deseja entre 0 a 90\n");
-  scanf("%f", &sinal_referencia);
+  
   p_tx_buffer = &tx_buffer[0];
   *p_tx_buffer++ = 0x01;
   *p_tx_buffer++ = 0x16;
