@@ -102,26 +102,52 @@ void lcd_init()   {
   delayMicroseconds(500);
 }
 
-void liga_lcd(){
+void liga_lcd(float temperatura_interna, float temperatura_referencia){
   printf("ENTROU NO LCD\n");
   if (wiringPiSetup () == -1) exit (1);
   fd = wiringPiI2CSetup(I2C_ADDR);
   lcd_init(); // setup LCD
-  lcd_init();
-  lcdLoc(LINHA1);
-  typeln("OLA");
-  lcdLoc(LINHA2);
-  typeln("TESTANDO");
-  sleep(2);
-  lcd_toggle_enable(0);
+  mostra_ti_tr(temperatura_interna, temperatura_referencia);
+  mostra_status(0);
 }
 
 void mostra_ti_tr(float temperatura_interna, float temperatura_referencia){
     ClrLcd(); 
     lcdLoc(LINHA1);
-    typeln("TI  ");
+    typeln("TI:");
     typeFloat(temperatura_interna);
-    typeln("   ");
-    typeln("TR  ");
+    typeln(" ");
+    typeln("TR:");
     typeFloat(temperatura_referencia);
+}
+
+void mostra_status(int status){
+  switch (status){
+    case 0:
+      // Airfri Iniciada
+      lcdLoc(LINHA2);
+      //typeln("            ");
+      typeln("PARADO");
+      break;
+    case 1:
+      // PRE-AQUECENDO
+      lcdLoc(LINHA2);
+      //typeln("            ");
+      typeln("PRE-AQUECENDO");
+      break;
+    case 2:
+      // RESFRIANDO
+      lcdLoc(LINHA2);
+      //typeln("            ");
+      typeln("RESFRIANDO");
+      break;
+  default:
+    break;
+  }
+}
+
+void mostra_tempo(float tempo){
+  lcdLoc(LINHA2);
+  typeln("TEMPO ");
+  typeFloat(tempo);
 }

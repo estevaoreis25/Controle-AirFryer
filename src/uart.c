@@ -66,7 +66,7 @@ int le_da_UART(){
     }
     else if (rx_length == 0)
     {
-        printf("Nenhum dado disponível.\n"); //No data waiting
+        //printf("Nenhum dado disponível.\n"); //No data waiting
         return 0;
     }
     return 1;

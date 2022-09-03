@@ -10,5 +10,8 @@ void lcdLoc(int line); //move cursor
 void ClrLcd(void); // clr LCD return home
 void typeln(const char *s);
 void typeChar(char val);
-void liga_lcd();
+void liga_lcd(float temperatura_interna, float temperatura_referencia);
+void mostra_ti_tr(float temperatura_interna, float temperatura_referencia);
+void mostra_status(int status);
+void mostra_tempo(float tempo);
 #endif /* LCD_H_ */
