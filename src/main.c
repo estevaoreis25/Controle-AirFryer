@@ -95,9 +95,45 @@ int main(){
             break;
         case 7:
             //Menu
-            //opcao_menu++;
-            //mostra_menu();
+            opcao_menu++;
+            if(opcao_menu>6){
+                opcao_menu = 0;
+                liga_lcd(temperatura_interna, temperatura_referencia);
+            }else{
+                mostra_menu(opcao_menu);
+            } 
+            if(opcao_menu != 0 && !inicia){
+                switch (opcao_menu){
+                case 1:
+                    tempo = 2.0;
+                    temperatura_referencia = 30.0;
 
+                break;
+                case 2:
+                    tempo = 3.0;
+                    temperatura_referencia = 40.0;
+                break;
+                case 3:
+                    tempo = 4.0;
+                    temperatura_referencia = 35.0;
+                    
+                break;
+                case 4:
+                    tempo = 5.0;
+                    temperatura_referencia = 40.0;
+                break;
+                case 5:
+                    tempo = 3.0;
+                    temperatura_referencia = 20.0;
+                break;
+                case 6:
+                    tempo = 4.0;
+                    temperatura_referencia = 25.0;
+                break;
+                default:
+                    break;
+                }
+            }
             break;
         
         default:
@@ -105,6 +141,7 @@ int main(){
      }
 
      if(airfray_ligada && airfray_em_uso){
+        
         aquece_airfrey();
 
      }else if(!airfray_em_uso && airfray_ligada) {
@@ -160,10 +197,15 @@ void conta_tempo(){
 
 void aquece_airfrey(){
     resfriado = 0;
-    if(!inicia){
+    if(!inicia && opcao_menu == 0){
         temperatura_referencia = solicita_temperatura_referencia();
         pid_atualiza_referencia(temperatura_referencia);
         //printf("Entrou na solicitação de temperatura de referencia %f\n", temperatura_referencia);
+        inicia = 1;
+    } else if(!inicia && opcao_menu != 0){
+        envia_valor_temporizador(tempo);
+        envia_sinal_referencia(temperatura_referencia);
+        pid_atualiza_referencia(temperatura_referencia);
         inicia = 1;
     }
     if(inicia){

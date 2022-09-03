@@ -151,3 +151,76 @@ void mostra_tempo(float tempo){
   typeln("TEMPO ");
   typeFloat(tempo);
 }
+
+void mostra_menu(int opcao_menu){
+    switch (opcao_menu){
+    case 1:
+        ClrLcd(); 
+        lcdLoc(LINHA1);
+        typeln("TEMPO:");
+        typeFloat(2.0);
+        typeln(" ");
+        typeln("TR:");
+        typeFloat(30.0);
+        lcdLoc(LINHA2);
+        typeln("FRANGO");
+    break;
+    case 2:
+        ClrLcd(); 
+        lcdLoc(LINHA1);
+        typeln("TEMPO:");
+        typeFloat(3.0);
+        typeln(" ");
+        typeln("TR:");
+        typeFloat(40.0);
+        lcdLoc(LINHA2);
+        typeln("PEIXE");
+    break;
+    case 3:
+        ClrLcd(); 
+        lcdLoc(LINHA1);
+        typeln("TEMPO:");
+        typeFloat(4.0);
+        typeln(" ");
+        typeln("TR:");
+        typeFloat(35.0);
+        lcdLoc(LINHA2);
+        typeln("CARNE");
+    break;
+    case 4:
+        ClrLcd(); 
+        lcdLoc(LINHA1);
+        typeln("TEMPO:");
+        typeFloat(5.0);
+        typeln(" ");
+        typeln("TR:");
+        typeFloat(40.0);
+        lcdLoc(LINHA2);
+        typeln("ARROZ");
+    break;
+    case 5:
+        ClrLcd(); 
+        lcdLoc(LINHA1);
+        typeln("TEMPO:");
+        typeFloat(3.0);
+        typeln(" ");
+        typeln("TR:");
+        typeFloat(20.0);
+        lcdLoc(LINHA2);
+        typeln("PIPOCA");
+    break;
+    case 6:
+        ClrLcd(); 
+        lcdLoc(LINHA1);
+        typeln("TEMPO:");
+        typeFloat(4.0);
+        typeln(" ");
+        typeln("TR:");
+        typeFloat(25.0);
+        lcdLoc(LINHA2);
+        typeln("VEGETAIS");
+    break;
+    default:
+        break;
+    }
+}
