@@ -2,6 +2,8 @@
 Este repositório, consiste no trabalho 2 de Fundamentos de Sistemas Embarcados, onde é simulado o controle de uma Airfryer.
 
 ## Como Executar a aplicação
+Para executar a aplicação é necessário que tenha instalado a o compilador `gcc` e o `make` na placa que for utilizada.
+
 * Faça o download deste repositório em uma das Raspberrys (43 ou 44)
 * Execute o arquivo `run.sh` na raiz do projeto
 
@@ -32,15 +34,15 @@ Existe as seguintes funcionalidades na aplicação:
 * Menu de presets de cozimentos de alimentos
 
 Algumas regras de uso:
-* Antes de qualquer coisa é preciso ligar a Airfrey. Se ela nao estiver ligada, os outros botões estaram inativos
+* Antes de qualquer coisa é preciso ligar a Airfrey. Se ela nao estiver ligada, os outros botões estarão inativos
 * Para selecionar o alimento no modo preset é preciso ir clicando no botão `Menu` até encontrar o alimento que deseja. As informações de cada alimento será mostrada no display. Quando escolher o alimento desejado clique em `Iniciar`. Caso não queira nenhum dos alimentos continue clicando até voltar ao estado inicial da airfrey
 * O presets de alimentos posui 7 configurações: `FRANGO`, `PEIXE`, `CARNE`, `ARROZ`, `PIPOCA`, `VEGETAIS` e `MENU INICIAL`
 
 ## Testes e Gráficos
-Antes de iniciar o primeiro teste eu gostaria de mostrar o modo de menu de alimentos. Para os 3 testes será usado a configuração para aquecer um `FRANGO`. Como apresentado na imagem, a configuração consiste basicamente no tempo que é de 2 minutos.
+Antes de iniciar os é importante mostrar o modo de menu de alimentos. Para os 3 testes será usado a configuração para aquecer um `FRANGO`. Como apresentado na imagem, a configuração consiste basicamente no tempo que é de 2 minutos.
 
 ![1](/imgs/01-%20adicionando_modo.png)
-### Primeiro Teste - PRE AQUECIMENTO
+### Primeiro Teste - PRE-AQUECIMENTO
 No primeiro teste vemos o comportamento da aplicação no momento de `PRE-AQUECIMENTO`.
 
 ![2](/imgs/02-%20Iniciando%20cozimento.png)
@@ -54,13 +56,26 @@ Após o a temperatura interna alcançar a temperatura de referência, o tempo co
 ![4](/imgs/04-%20Inicio%20de%20cozimento.png)
 
 É possível ver que a temperatura interna está se mantendo alinhada com a temperatura de referência.
+
 ![5](/imgs/05-%20Estabilizando.png)
+
+O tempo também está diminuindo
 
 ![6](/imgs/06-%20Tempo%20finalizando.png)
 
+### Terceiro Teste - RESFRIAMENTO
+
+Após o tempo de cozimento ser encerrado começa o momento de `RESFRIAMENTO`. É possível ver no gráfico que a temperatura está diminuindo.
+
 ![7](/imgs/07-%20Resfriando.png)
 
+Nesse momento a temperatura de referência se torna a temperatura ambiente. A temperatura vai resfriando até chegar no momento em que as temperaturas se aproximem suficientemente para que a Airfrey possa ser desligada.
+
 ![8](/imgs/08-%20Resfriando.png)
+
+### Quarto Teste - AIRFRYER PARADA
+
+Nas imagens abaixo é demonstrado o comportamento da aplicação quando o botão `PARAR` é clicado. Tanto o processo de aquecimento quando de resfriamento são interrompidos.
 
 ![9](/imgs/09-%20Parando%20Airfryer.png)
 
