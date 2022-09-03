@@ -14,7 +14,7 @@ float solicita_temperatura_interna();
 float solicita_temperatura_referencia();
 int le_comandos_usuario();
 void envia_sinal_controle(int sinal_controle);
-void envia_sinal_referencia();
+void envia_sinal_referencia(float sinal_referencia);
 int envia_estado_sistema(int sinal_usuario);
 int envia_estado_funcionamento(int sinal_usuario);
 int envia_valor_temporizador(int tempo);

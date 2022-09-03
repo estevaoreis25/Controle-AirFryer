@@ -66,7 +66,7 @@ int main(){
             if(airfray_ligada && !airfray_em_uso){
                 envia_valor_temporizador(1);
                 tempo++;
-                printf("TEMPO ATUAL: %f\n", tempo);
+                //printf("TEMPO ATUAL: %f\n", tempo);
             }
             
             break;
@@ -75,7 +75,7 @@ int main(){
             if(airfray_ligada && !airfray_em_uso){
                 envia_valor_temporizador(-1);
                 tempo--;
-                printf("TEMPO ATUAL: %f\n", tempo);
+                //printf("TEMPO ATUAL: %f\n", tempo);
             }
             break;
         
@@ -89,11 +89,14 @@ int main(){
      }else if(!airfray_em_uso && airfray_ligada) {
         //para_aquecimento();
      }
-     if(!inicia_cozimento && airfray_em_uso && !resfriado){
-        pid_atualiza_referencia(26.0);
-        envia_sinal_referencia(26.0);
+     if(!inicia_cozimento && airfray_em_uso && !resfriado && tempo==0){
+        // Resfriamento da airfrey apos o cozimento
+        //printf("Entrou no resfriamento\n");
+        pid_atualiza_referencia(26.0f);
+        envia_sinal_referencia(26.0f);
         temperatura_referencia = 26.0;
-        if((temperatura_interna - 2) <= temperatura_referencia){
+        if((temperatura_interna - 0.7) <= temperatura_referencia){
+            // ser for completamente resfriada setta os paramentos de inicialização
             aquece(0);
             resfria(0);
             para_aquecimento();
@@ -124,11 +127,11 @@ void conta_tempo(){
             segundos = 0;
         }
         if(tempo <= 0.0){
-            printf("ACABOU O TEMPO\n");
+            //printf("ACABOU O TEMPO\n");
             inicia_cozimento = 0;
             segundos = 0;
         }
-        printf("Segundos %.1f -- Minutos %.1f\n", segundos, tempo);
+        //printf("Segundos %.1f -- Minutos %.1f\n", segundos, tempo);
     }
 }
 
@@ -137,7 +140,7 @@ void aquece_airfrey(){
     if(!inicia){
         temperatura_referencia = solicita_temperatura_referencia();
         pid_atualiza_referencia(temperatura_referencia);
-        printf("Entrou na solicitação de temperatura de referencia %f\n", temperatura_referencia);
+        //printf("Entrou na solicitação de temperatura de referencia %f\n", temperatura_referencia);
         inicia = 1;
     }
     if(inicia){
@@ -154,7 +157,7 @@ void aquece_airfrey(){
             else resfria(abs((int)sinal_controle));
             aquece(0);
         }
-        if((temperatura_interna + 1) >= temperatura_referencia && tempo>0){
+        if((temperatura_interna + 0.5) >= temperatura_referencia && tempo>0){
             inicia_cozimento = 1;
         }
     }
